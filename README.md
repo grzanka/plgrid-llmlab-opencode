@@ -18,6 +18,7 @@ against the live gateway**, not copied from model cards.
 
 | | |
 |---|---|
+| [GUI.md](GUI.md) | Step-by-step setup in the desktop app and the web interface |
 | [research/models.md](research/models.md) | Which models work, measured throughput and correctness, recommended assignments |
 | [research/pitfalls.md](research/pitfalls.md) | Traps that cost real debugging time — config, agents, runtime, model behaviour |
 | [research/plugin.md](research/plugin.md) | How the provider plugin works and how to distribute it |
@@ -158,25 +159,20 @@ opencode
 ## Using the GUI
 
 The desktop app and the web interface use the same server as the TUI, so they load
-the same plugin, config, agents and key. Install the setup as above and open your
-project in the app (**Add project** in the desktop app). Tested with the 1.x and 2.x web
-UI and the 2.x desktop app; details, downloads and desktop caveats are in
-[research/gui.md](research/gui.md). Do these once:
+the same plugin, config, agents and key. Copy the setup files as in step 2 above, per
+project or machine-wide, then follow **[GUI.md](GUI.md)**: step-by-step login and
+one-time settings in the app, for both install types. In short, on 2.x:
 
-- **Log in.** The CLI login above works in the apps. To log in from the app, open a
-  session in your project — with a per-project install, global **Settings → Providers**
-  does not offer PLGrid. On 2.x type `/connect` → **PLGrid Forge (Cyfronet)**; on 1.x
-  use the model picker → **Manage models** → **Connect provider** → PLGrid.
-- **2.x: after logging in from the app, pick DeepSeek V4.1 Flash** in the model dialog
-  that follows. **Continue** alone selects GLM-5.2 FP8, which timed out on every
-  request in the benchmark (see *Known issues*).
-- **2.x: turn on the PLGrid models** if the model picker does not list them: model
-  picker → **Manage models** → **PLGrid Forge (Cyfronet)**.
-- **2.x: turn on the agent picker** under **Settings → Preferences → Show agent**.
-  Until then every session uses `build`, and `architect` and `chat` cannot be chosen.
-- **1.x web UI: pick the model by hand.** It starts on "Big Pickle", not the default.
-- **Desktop app: `npx` must be on the PATH your shell startup files set.** The app
-  takes its environment from your login shell, and the context7 MCP server needs `npx`.
+- **Log in** with `/connect` in a session of your project, or, machine-wide, under
+  **Settings → Providers**. A key stored with the CLI login above works too.
+- **Pick DeepSeek V4.1 Flash** in the model dialog that follows a login from the app.
+  **Continue** alone selects GLM-5.2 FP8, which timed out on every request in the
+  benchmark.
+- **Turn on Settings → Preferences → Show agent**, or `architect` and `chat` cannot be
+  chosen.
+
+Tested with the 2.x desktop app and the 1.x and 2.x web UI; the 1.x desktop app is
+untested ([research/gui.md](research/gui.md)).
 
 ## What you get
 

@@ -2,8 +2,8 @@
 
 OpenCode has two graphical apps next to the terminal TUI: the desktop app and the web
 interface. This setup works in both without changes to the plugin, `opencode.json` or
-`AGENTS.md`. A few settings have to be made once in the app; the README lists them under
-*Using the GUI*. This page records what was tested and why it works.
+`AGENTS.md`. A few settings have to be made once in the app; [GUI.md](../GUI.md) walks
+through them. This page records what was tested and why it works.
 
 ## Why it works
 
@@ -58,8 +58,24 @@ After a login through `/connect`, the 2.x desktop app opens a **Choose a model t
 with** dialog listing the 20 models. Clicking **Continue** without choosing one selected
 GLM-5.2 FP8, the first in the list, and new sessions then started on it instead of the
 `opencode.json` default. GLM-5.2 FP8 timed out on every request when the benchmark was
-run, so pick DeepSeek V4.1 Flash in that dialog. With the key stored before the app
-first ran, no dialog appears and sessions start on the configured default.
+run, so pick DeepSeek V4.1 Flash in that dialog: choosing it there, then **Continue**,
+started sessions on it. With the key stored before the app first ran, no dialog appears
+and sessions start on the configured default.
+
+### Machine-wide install
+
+Tested with the 2.2.1 desktop app on 2026-10-29: a sandbox HOME with `plgrid.js` in
+`~/.config/opencode/plugins/`, this repo's `opencode.json` as
+`~/.config/opencode/opencode.json`, and a real PLGrid key.
+
+- **Before login, global Settings → Providers offers PLGrid**, unlike with a per-project
+  install: **Show more providers** lists PLGrid Forge (Cyfronet), and choosing it opens
+  the same key dialog as `/connect`.
+- After the key, the same **Choose a model to start with** dialog appears. Afterwards
+  Settings → Providers lists PLGrid Forge (Cyfronet) under **Connected providers**.
+- In a project with no setup files of its own (the app's start folder), the model
+  picker listed all 20 models, and DeepSeek V4.1 Flash, chosen in that dialog, answered
+  a prompt.
 
 ## The desktop app
 
