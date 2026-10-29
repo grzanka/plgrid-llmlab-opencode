@@ -7,8 +7,9 @@ running on Polish academic infrastructure.
 > [!IMPORTANT]
 > OpenCode ships in two forms: a terminal app (the TUI, started with `opencode`, plus
 > `opencode run` for scripts) and graphical apps (the desktop app and the web
-> interface). **This setup covers the terminal TUI only.** Everything here was built
-> and tested in the terminal; the graphical apps were not tested.
+> interface). **This setup was built in the terminal TUI and also works in the
+> graphical apps**, after a few one-time settings in the app — see *Using the GUI*.
+> The 1.x desktop app has not been tested.
 
 Model capabilities, context limits and the benchmark figures below were **measured
 against the live gateway**, not copied from model cards.
@@ -20,6 +21,7 @@ against the live gateway**, not copied from model cards.
 | [research/models.md](research/models.md) | Which models work, measured throughput and correctness, recommended assignments |
 | [research/pitfalls.md](research/pitfalls.md) | Traps that cost real debugging time — config, agents, runtime, model behaviour |
 | [research/plugin.md](research/plugin.md) | How the provider plugin works and how to distribute it |
+| [research/gui.md](research/gui.md) | The desktop app and the web interface: what was tested, what to set |
 | [research/reproducing.md](research/reproducing.md) | Commands to re-derive every measurement yourself |
 | [research/benchmarks/](research/benchmarks/) | Agentic fixtures with differential scorers |
 
@@ -29,8 +31,8 @@ against the live gateway**, not copied from model cards.
   [Forge guide](https://guide.plgrid.pl/en/integrated-platforms/plgrid_forge).
   Activate the service at <https://portal.plgrid.pl/services/111>, then generate a
   key at <https://llmlab.plgrid.pl> under **Grants → Generate API Key**.
-- [OpenCode](https://opencode.ai) 1.18.5 or newer, the terminal version. Both the 1.x
-  and the 2.x version work — see the next section.
+- [OpenCode](https://opencode.ai) 1.18.5 or newer. Both the 1.x and the 2.x version
+  work — see the next section. The install steps below use the terminal version.
 - Optional but recommended: `npm install -g pyright` for in-editor diagnostics
   (see *LSP* below).
 
@@ -153,6 +155,29 @@ agent:
 opencode
 ```
 
+## Using the GUI
+
+The desktop app and the web interface use the same server as the TUI, so they load
+the same plugin, config, agents and key. Install the setup as above and open your
+project in the app (**Add project** in the desktop app). Tested with the 1.x and 2.x web
+UI and the 2.x desktop app; details, downloads and desktop caveats are in
+[research/gui.md](research/gui.md). Do these once:
+
+- **Log in.** The CLI login above works in the apps. To log in from the app, open a
+  session in your project — with a per-project install, global **Settings → Providers**
+  does not offer PLGrid. On 2.x type `/connect` → **PLGrid Forge (Cyfronet)**; on 1.x
+  use the model picker → **Manage models** → **Connect provider** → PLGrid.
+- **2.x: after logging in from the app, pick DeepSeek V4.1 Flash** in the model dialog
+  that follows. **Continue** alone selects GLM-5.2 FP8, which timed out on every
+  request in the benchmark (see *Known issues*).
+- **2.x: turn on the PLGrid models** if the model picker does not list them: model
+  picker → **Manage models** → **PLGrid Forge (Cyfronet)**.
+- **2.x: turn on the agent picker** under **Settings → Preferences → Show agent**.
+  Until then every session uses `build`, and `architect` and `chat` cannot be chosen.
+- **1.x web UI: pick the model by hand.** It starts on "Big Pickle", not the default.
+- **Desktop app: `npx` must be on the PATH your shell startup files set.** The app
+  takes its environment from your login shell, and the context7 MCP server needs `npx`.
+
 ## What you get
 
 **20 models**, of which **14 support function calling**. On the benchmark fixtures,
@@ -191,9 +216,9 @@ The remaining 6 models **cannot use tools**. They remain useful for chat, transl
 and Polish-language work.
 
 > **Important:** to use a model without function calling, switch to the `chat`
-> agent first (**Tab** in the TUI, or `--agent chat`). The default `build` and
-> `plan` agents always send a tools array, and those models reject it with a hard
-> HTTP 400.
+> agent first (**Tab** in the TUI, the agent picker in the GUI, or `--agent chat`).
+> The default `build` and `plan` agents always send a tools array, and those models
+> reject it with a hard HTTP 400.
 
 **5 agents:**
 
@@ -206,10 +231,10 @@ and Polish-language work.
 | `fastfix` | subagent | DeepSeek-V4.1-Flash | Small, well-specified mechanical edits |
 
 Invoke subagents with `@researcher`, `@reviewer`, `@fastfix`. Cycle primary agents
-(`architect`, `chat`, and the built-in `build`/`plan`) with **Tab** in the TUI, or
-pass `--agent <name>` to `opencode run`. The benchmark's own `bench` agent is not
-here: it lives in `research/benchmarks/bench-opencode.json`, loaded only by the
-benchmark runner.
+(`architect`, `chat`, and the built-in `build`/`plan`) with **Tab** in the TUI, pick
+them in the GUI's agent picker, or pass `--agent <name>` to `opencode run`. The
+benchmark's own `bench` agent is not here: it lives in
+`research/benchmarks/bench-opencode.json`, loaded only by the benchmark runner.
 
 `AGENTS.md` is deliberately short and contains only directives — it is prepended to
 every agent's system prompt, so anything descriptive in it is paid for on every
